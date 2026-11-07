@@ -42,11 +42,3 @@ Playora/
 ├── README.md
 └── ...
 ```
-
-## Notes
-
-This README is a starting point for the project. As the app grows, you can expand it with setup instructions, architecture details, screenshots, and contribution guidelines.
-
-## License
-
-This project does not currently include a license file. Add one if you want to define usage and distribution terms.
