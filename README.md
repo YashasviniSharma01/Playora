@@ -28,6 +28,7 @@ Playora is a full-stack music application that combines an Express.js backend wi
 - Vite
 - Tailwind CSS
 - React Router DOM
+- Axios
 
 ## Project Structure
 
@@ -90,16 +91,51 @@ MongoDB / ImageKit / Auth Services
 - `frontend/src/App.css`: Holds stylesheet logic for component-specific layout and visuals.
 - `frontend/index.html`: Base HTML shell used by Vite.
 
+### Request and Data Flow
+
+A typical frontend-to-backend interaction follows this flow:
+
+```text
+1. User interacts with a page or control
+              ↓
+2. React component validates input and manages loading/error UI
+              ↓
+3. Axios sends an HTTP request to the relevant /api endpoint
+              ↓
+4. Express route applies middleware and calls a controller
+              ↓
+5. Controller uses services/models to perform the requested operation
+              ↓
+6. Backend returns a JSON response (and/or a media URL)
+              ↓
+7. React updates the UI with the result or displays an error
+```
+
+For example, a music browsing view requests the music list from the API, renders the returned items, and shows loading, empty, or error states as appropriate. For protected actions such as uploads, the backend remains responsible for authorization and validation; client-side checks are only for user experience and must not replace server-side security.
+
 ### Architectural Pattern
 
-The current frontend follows a simple SPA pattern:
+The current frontend follows a simple single-page application (SPA) pattern:
 
 - Presentation layer: React components and page-level views
-- State and app flow: handled in the app shell and routed UI
-- API integration: uses HTTP requests to the backend through the Express API
-- Styling: Vite + CSS with Tailwind support for scalable UI design
+- App flow: coordinated by the app shell and client-side routes
+- API integration: HTTP requests to the Express API, using Axios
+- Styling: CSS with Tailwind CSS support
 
-This architecture keeps the client easy to understand and easy to extend as the app grows, while remaining aligned with the backend’s modular Express structure.
+This architecture keeps the client easy to understand and extend while remaining aligned with the backend’s modular Express structure.
+
+### Frontend Best Practices
+
+- **Organize by feature as the app grows.** Keep related pages, components, API calls, and styles together (for example, music browsing, authentication, and artist uploads) rather than letting the root app become too large.
+- **Keep components focused.** Use reusable UI components for repeated patterns and keep data-fetching or coordination logic out of purely presentational components where practical.
+- **Centralize API configuration.** Use a shared Axios client for the API base URL, common headers, and consistent error handling. Keep environment-specific URLs in Vite environment variables (such as `VITE_API_BASE_URL`) and never put secrets in frontend variables.
+- **Handle every request state.** Provide clear loading, success, empty, and error states, and prevent duplicate submissions where appropriate.
+- **Validate at both boundaries.** Validate user input in the UI for helpful feedback, but always repeat security-sensitive validation and authorization on the backend.
+- **Protect user data.** Do not expose credentials or private keys in browser code. Follow the backend’s authentication contract and avoid storing sensitive tokens in an unsafe location.
+- **Make media accessible and resilient.** Use descriptive alternative text for artwork, controls with accessible labels, and sensible fallbacks when images or audio fail to load.
+- **Build responsive and accessible interfaces.** Use semantic HTML, keyboard-accessible controls, visible focus states, and layouts that work across screen sizes.
+- **Keep styles maintainable.** Prefer shared design tokens and reusable styles; avoid duplicating global rules across components.
+- **Check quality before changes are merged.** Run `npm run lint` and `npm run build` from `frontend/`, and test key user flows such as login, browsing, and uploads when those features are available.
 
 ## API Overview
 
