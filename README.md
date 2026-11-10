@@ -35,6 +35,10 @@ Playora is a full-stack music application that combines an Express.js backend wi
 Playora/
 ├── frontend/                 # React + Vite frontend
 │   ├── src/
+│   │   ├── main.jsx         # React bootstrap entry
+│   │   ├── App.jsx          # Main app shell
+│   │   ├── App.css          # Component styles
+│   │   └── index.css        # Global styles / Tailwind setup
 │   ├── package.json
 │   ├── vite.config.js
 │   └── index.html
@@ -53,6 +57,49 @@ Playora/
 ├── package-lock.json
 └── .env.example (if added locally)
 ```
+
+## Frontend Architecture
+
+The frontend is a Vite-powered React application that serves as the user-facing layer of Playora. It is structured as a lightweight client-side app with a clear separation between app bootstrapping, UI rendering, and API communication.
+
+### Current Architecture
+
+```text
+Browser
+  ↓
+Vite Dev Server / frontend
+  ↓
+React Root (frontend/src/main.jsx)
+  ↓
+App Shell (frontend/src/App.jsx)
+  ↓
+UI Views / Components
+  ↓
+Axios API Calls
+  ↓
+Express Backend (src/routes, controllers, services)
+  ↓
+MongoDB / ImageKit / Auth Services
+```
+
+### Responsibilities by File
+
+- `frontend/src/main.jsx`: Mounts the React application into the DOM.
+- `frontend/src/App.jsx`: Acts as the main app container and root-level UI coordinator.
+- `frontend/src/index.css`: Defines global styling and theme-level rules.
+- `frontend/src/App.css`: Holds stylesheet logic for component-specific layout and visuals.
+- `frontend/index.html`: Base HTML shell used by Vite.
+
+### Architectural Pattern
+
+The current frontend follows a simple SPA pattern:
+
+- Presentation layer: React components and page-level views
+- State and app flow: handled in the app shell and routed UI
+- API integration: uses HTTP requests to the backend through the Express API
+- Styling: Vite + CSS with Tailwind support for scalable UI design
+
+This architecture keeps the client easy to understand and easy to extend as the app grows, while remaining aligned with the backend’s modular Express structure.
 
 ## API Overview
 
@@ -137,6 +184,7 @@ The frontend typically runs on the Vite default port (commonly `5173`), while th
 - The root project is configured as a Node.js/Express API server.
 - The `frontend` folder contains the client app for the music experience.
 - The backend is organized using MVC-style folders (`controllers`, `models`, `routes`, `middlewares`, `services`).
+- The frontend currently follows a minimal React SPA architecture that is ready to evolve into feature-based pages and reusable components.
 - The app is ready for extension with additional playback, playlist, and artist dashboard features.
 
 ## License
